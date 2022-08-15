@@ -107,14 +107,14 @@ export default defineComponent({
           );
           el.style.left = x + "px";
           el.style.top = y + "px";
-          // if (this.clockwise) {
-          //   if (angle === 0) {
-          //     angle = step * this.totalFields;
-          //   }
-          //   angle -= step;
-          // } else {
-          angle += step;
-          // }
+          if (this.clockwise) {
+            if (angle === 0) {
+              angle = step * this.totalFields;
+            }
+            angle -= step;
+          } else {
+            angle += step;
+          }
         }
       });
     },

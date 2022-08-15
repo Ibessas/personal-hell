@@ -87,17 +87,9 @@ export default defineComponent({
         this.isSpinning = true;
         this.next = true;
         const that = this;
-        if (this.clockwise) {
-          this.slide = this.slides[this.slides.length - 1].name;
-        } else {
-          this.slide = this.slides[1].name;
-        }
+        this.slide = this.slides[1].name;
         setTimeout(function () {
-          if (that.clockwise) {
-            that.clockwiseList();
-          } else {
-            that.counterClockwiseList();
-          }
+          that.counterClockwiseList();
           that.updateKey++;
           that.isSpinning = false;
         }, that.animationTime);
