@@ -15,6 +15,8 @@ export default defineComponent({
   name: "CircularCarousel",
   props: {
     modelValue: Boolean,
+    animationTime: Number,
+    clockwise: Boolean,
   },
   emits: ["update:modelValue"],
   data() {
@@ -33,10 +35,22 @@ export default defineComponent({
       ).filter((el) => el.nodeName !== "#text").length;
     },
     positiveCircleRotation: function () {
-      return `rotate(${360 / this.totalFields}deg)`;
+      const degrees = this.clockwise
+        ? -`${360 / this.totalFields}`
+        : `${360 / this.totalFields}`;
+      return `rotate(${degrees}deg)`;
     },
     negativeCircleRotation: function () {
-      return `rotate(-${360 / this.totalFields}deg)`;
+      const degrees = this.clockwise
+        ? `${360 / this.totalFields}`
+        : -`${360 / this.totalFields}`;
+      return `rotate(${degrees}deg)`;
+    },
+    animationParent: function () {
+      return `parentSpin ${this.animationTime / 1000}s`;
+    },
+    animationContent: function () {
+      return `contentSpin ${this.animationTime / 1000}s`;
     },
   },
   watch: {
@@ -72,7 +86,7 @@ export default defineComponent({
           that.childSpin = false;
           that.parentSpin = false;
           that.$forceUpdate();
-        }, 3000);
+        }, that.animationTime);
       }
     },
     itemPosition() {
@@ -81,8 +95,8 @@ export default defineComponent({
       let width = container.style.width;
       let height = container.style.height;
       let fields = Array.from(container.childNodes);
-      let angle = 0,
-        step = (2 * Math.PI) / this.totalFields;
+      let angle = 0;
+      let step = (2 * Math.PI) / this.totalFields;
       fields.forEach((el) => {
         if (el.style) {
           let x = Math.round(
@@ -93,7 +107,14 @@ export default defineComponent({
           );
           el.style.left = x + "px";
           el.style.top = y + "px";
+          // if (this.clockwise) {
+          //   if (angle === 0) {
+          //     angle = step * this.totalFields;
+          //   }
+          //   angle -= step;
+          // } else {
           angle += step;
+          // }
         }
       });
     },
@@ -103,11 +124,11 @@ export default defineComponent({
 
 <style >
 .parentSpin {
-  animation: parentSpin 3s;
+  animation: v-bind("animationParent");
 }
 
 .contentSpin {
-  animation: contentSpin 3s;
+  animation: v-bind("animationContent");
 }
 
 .container {
