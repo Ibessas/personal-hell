@@ -21,15 +21,15 @@
           :name="slide.name"
           class="column no-wrap flex-center"
         >
-          <carousel-slide :contentColor="slide.color" />
+          <carousel-slide :contentColor="slide.color" :title="slide.name" />
         </q-carousel-slide>
       </q-carousel>
-      <circular-carousel>
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
+      <circular-carousel v-model="next" :key="updateKey">
+        <div v-for="slide in slides" :key="slide">
+          {{ slide.name }}
+        </div>
       </circular-carousel>
+      <q-btn color="primary" icon="check" label="OK" @click="nextItem" />
     </div>
   </q-page>
 </template>
@@ -37,15 +37,17 @@
 <script>
 import CarouselSlide from "src/components/CarouselSlide.vue";
 import CircularCarousel from "src/components/CircularCarousel.vue";
-import { defineComponent } from "vue";
+import { defineComponent, ref, VueElement } from "vue";
 
 export default defineComponent({
   name: "IndexPage",
   components: { CarouselSlide, CircularCarousel },
   data() {
     return {
+      next: false,
       slide: "style",
       colorNum: 0,
+      updateKey: 0,
       slides: [
         {
           name: "first",
@@ -70,6 +72,19 @@ export default defineComponent({
     this.slides.map((slide, index) => {
       slide.color = `hsl(${(999 * (index + 1)) / this.slides.length},80%, 50%)`;
     });
+  },
+  methods: {
+    nextItem() {
+      const that = this;
+      this.next = true;
+      this.slide = this.slides[1].name;
+      setTimeout(function () {
+        const first = that.slides[0];
+        that.slides.shift();
+        that.slides.push(first);
+        that.updateKey++;
+      }, 3000);
+    },
   },
 });
 </script>

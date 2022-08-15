@@ -7,18 +7,16 @@
   >
     <slot></slot>
   </div>
-  <q-btn
-    color="primary"
-    icon="check"
-    label="OK"
-    @click="(childSpin = !childSpin), (parentSpin = !parentSpin)"
-  />
 </template>
 <script>
 import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "CircularCarousel",
+  props: {
+    modelValue: Boolean,
+  },
+  emits: ["update:modelValue"],
   data() {
     return {
       childSpin: false,
@@ -28,20 +26,50 @@ export default defineComponent({
   mounted() {
     this.itemPosition();
   },
+  computed: {
+    totalFields: function () {
+      return Array.from(
+        document.getElementsByClassName("container")[0].childNodes
+      ).filter((el) => el.nodeName !== "#text").length;
+    },
+  },
   watch: {
     childSpin: function (value) {
+      console.log(document.getElementsByClassName("container")[0]);
       if (value) {
-        this.$slots.default().forEach((item) => {
-          item.el.className = "contentSpin";
-        });
+        [...document.getElementsByClassName("container")[0].childNodes].forEach(
+          (item) => {
+            if (item.classList) item.classList.add("contentSpin");
+          }
+        );
       } else {
-        this.$slots.default().forEach((item) => {
-          item.el.className = "";
-        });
+        [...document.getElementsByClassName("container")[0].childNodes].forEach(
+          (item) => {
+            if (item.classList) item.classList.remove("contentSpin");
+          }
+        );
+      }
+    },
+    modelValue: function (value) {
+      if (value) {
+        this.doSpin();
+        this.$emit("update:modelValue", false);
       }
     },
   },
   methods: {
+    doSpin() {
+      if (!this.childSpin) {
+        const that = this;
+        this.childSpin = true;
+        this.parentSpin = true;
+        setTimeout(function () {
+          that.childSpin = false;
+          that.parentSpin = false;
+          that.$forceUpdate();
+        }, 3000);
+      }
+    },
     itemPosition() {
       const radius = 50;
       let container = document.getElementsByClassName("container")[0];
@@ -49,7 +77,7 @@ export default defineComponent({
       let height = container.style.height;
       let fields = Array.from(container.childNodes);
       let angle = 0,
-        step = (2 * Math.PI) / (fields.length - 2);
+        step = (2 * Math.PI) / this.totalFields;
       fields.forEach((el) => {
         if (el.style) {
           let x = Math.round(
@@ -94,8 +122,8 @@ export default defineComponent({
 
 @keyframes parentSpin
   100%
-    transform: rotate(90deg)
+    transform: rotate(-72deg)
 @keyframes contentSpin
   100%
-    transform: rotate(-90deg)
+    transform: rotate(72deg)
 </style>

@@ -6,6 +6,7 @@
     }"
   >
     <q-icon name="style" size="56px" />
+    <div>{{ title }}</div>
     <div class="q-mt-md text-center">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit
     </div>
@@ -21,6 +22,9 @@ export default defineComponent({
     contentColor: {
       type: String,
       default: "black",
+    },
+    title: {
+      type: String,
     },
   },
 });
