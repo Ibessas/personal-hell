@@ -48,6 +48,7 @@ export default defineComponent({
       slide: "style",
       colorNum: 0,
       updateKey: 0,
+      isSpinning: false,
       slides: [
         {
           name: "first",
@@ -61,9 +62,6 @@ export default defineComponent({
         {
           name: "fourth",
         },
-        {
-          name: "fifth",
-        },
       ],
     };
   },
@@ -75,15 +73,19 @@ export default defineComponent({
   },
   methods: {
     nextItem() {
-      const that = this;
-      this.next = true;
-      this.slide = this.slides[1].name;
-      setTimeout(function () {
-        const first = that.slides[0];
-        that.slides.shift();
-        that.slides.push(first);
-        that.updateKey++;
-      }, 3000);
+      if (!this.isSpinning) {
+        this.isSpinning = true;
+        this.next = true;
+        const that = this;
+        this.slide = this.slides[1].name;
+        setTimeout(function () {
+          const first = that.slides[0];
+          that.slides.shift();
+          that.slides.push(first);
+          that.updateKey++;
+          that.isSpinning = false;
+        }, 3000);
+      }
     },
   },
 });

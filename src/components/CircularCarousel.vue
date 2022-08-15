@@ -32,10 +32,15 @@ export default defineComponent({
         document.getElementsByClassName("container")[0].childNodes
       ).filter((el) => el.nodeName !== "#text").length;
     },
+    positiveCircleRotation: function () {
+      return `rotate(${360 / this.totalFields}deg)`;
+    },
+    negativeCircleRotation: function () {
+      return `rotate(-${360 / this.totalFields}deg)`;
+    },
   },
   watch: {
     childSpin: function (value) {
-      console.log(document.getElementsByClassName("container")[0]);
       if (value) {
         [...document.getElementsByClassName("container")[0].childNodes].forEach(
           (item) => {
@@ -96,34 +101,43 @@ export default defineComponent({
 });
 </script>
 
-<style lang="sass">
-.parentSpin
-  animation: parentSpin 3s
+<style >
+.parentSpin {
+  animation: parentSpin 3s;
+}
 
-.contentSpin
-  animation: contentSpin 3s
+.contentSpin {
+  animation: contentSpin 3s;
+}
 
-.container
-  width: 50px
-  height: 50px
-  margin: 50px
-  position: relative
-  border-radius: 50%
-  border: 1px solid black
-  color: #f00
-  div
-    border: 1px solid red
-    position: absolute
-    width: 50px
-    height: 50px
-    color: #000
-    border-radius: 50%
-    line-height: 50px
+.container {
+  width: 50px;
+  height: 50px;
+  margin: 50px;
+  position: relative;
+  border-radius: 50%;
+  border: 1px solid black;
+  color: #f00000;
+}
+.container > div {
+  border: 1px solid red;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  color: #000;
+  border-radius: 50%;
+  line-height: 50px;
+}
 
-@keyframes parentSpin
-  100%
-    transform: rotate(-72deg)
-@keyframes contentSpin
-  100%
-    transform: rotate(72deg)
+@keyframes parentSpin {
+  100% {
+    transform: v-bind("negativeCircleRotation");
+  }
+}
+
+@keyframes contentSpin {
+  100% {
+    transform: v-bind("positiveCircleRotation");
+  }
+}
 </style>
