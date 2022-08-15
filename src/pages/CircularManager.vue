@@ -24,7 +24,12 @@
           <carousel-slide :contentColor="slide.color" :title="slide.name" />
         </q-carousel-slide>
       </q-carousel>
-      <circular-carousel v-model="next" :key="updateKey">
+      <circular-carousel
+        v-model="next"
+        :key="updateKey"
+        :animationTime="animationTime"
+        :clockwise="clockwise"
+      >
         <div v-for="slide in slides" :key="slide">
           {{ slide.name }}
         </div>
@@ -49,6 +54,8 @@ export default defineComponent({
       colorNum: 0,
       updateKey: 0,
       isSpinning: false,
+      animationTime: 250,
+      clockwise: true,
       slides: [
         {
           name: "first",
@@ -61,6 +68,9 @@ export default defineComponent({
         },
         {
           name: "fourth",
+        },
+        {
+          name: "fifth",
         },
       ],
     };
@@ -79,13 +89,21 @@ export default defineComponent({
         const that = this;
         this.slide = this.slides[1].name;
         setTimeout(function () {
-          const first = that.slides[0];
-          that.slides.shift();
-          that.slides.push(first);
+          that.counterClockwiseList();
           that.updateKey++;
           that.isSpinning = false;
-        }, 3000);
+        }, that.animationTime);
       }
+    },
+    counterClockwiseList() {
+      const first = this.slides[0];
+      this.slides.shift();
+      this.slides.push(first);
+    },
+    clockwiseList() {
+      const last = this.slides[this.slides.length - 1];
+      this.slides.pop();
+      this.slides.unshift(last);
     },
   },
 });
