@@ -31,7 +31,9 @@
         :clockwise="clockwise"
       >
         <div v-for="slide in slides" :key="slide">
-          {{ slide.name }}
+          <q-avatar>
+            <img :src="slide.url" alt="" srcset="" />
+          </q-avatar>
         </div>
       </circular-carousel>
       <q-btn color="primary" icon="check" label="OK" @click="nextItem" />
@@ -45,7 +47,7 @@ import CircularCarousel from "src/components/CircularCarousel.vue";
 import { defineComponent, ref, VueElement } from "vue";
 
 export default defineComponent({
-  name: "IndexPage",
+  name: "CircularManager",
   components: { CarouselSlide, CircularCarousel },
   data() {
     return {
@@ -56,23 +58,7 @@ export default defineComponent({
       isSpinning: false,
       animationTime: 250,
       clockwise: true,
-      slides: [
-        {
-          name: "first",
-        },
-        {
-          name: "second",
-        },
-        {
-          name: "third",
-        },
-        {
-          name: "fourth",
-        },
-        {
-          name: "fifth",
-        },
-      ],
+      slides: [],
     };
   },
   mounted() {

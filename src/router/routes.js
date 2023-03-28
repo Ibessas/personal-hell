@@ -1,10 +1,17 @@
 
 const routes = [
   {
-    path: '/',
+    path: '/components',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/CircularManager.vue') }
+    ]
+  },
+  {
+    path: '/',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('src/pages/PrincipalPage.vue') }
     ]
   },
 
